@@ -55,32 +55,11 @@
             color: #333;
         }
 
-        /* Estilos para el grupo de radio buttons */
         .radio-group {
             display: flex; /* Para que las opciones se alineen horizontalmente */
             justify-content: flex-start; /* Alinea las opciones a la izquierda */
             gap: 16px; /* Espacio entre las opciones */
             margin-bottom: 16px;
-            flex-wrap: nowrap; /* Evita que las opciones se envuelvan */
-            white-space: nowrap; /* Asegura que las opciones permanezcan en una sola línea */
-            overflow-x: auto; /* Permite desplazarse horizontalmente si el contenido excede el ancho */
-        }
-
-        .radio-group label {
-            font-size: 13px; /* Tamaño de fuente moderado */
-            font-weight: normal; /* No negrita para las opciones */
-            display: inline-flex;
-            align-items: center;
-        }
-
-        .radio-group input[type="radio"] {
-            margin-right: 8px; /* Espacio entre el radio button y el texto */
-        }
-
-        /* Añadir línea inferior para cada grupo */
-        .radio-group {
-            border-bottom: 1px solid #ddd; /* Línea sutil para separar las opciones */
-            padding-bottom: 12px; /* Espacio adicional abajo */
         }
 
         button {
@@ -117,7 +96,7 @@
     <p><strong>N° de Teléfono:</strong> <span id="phone_number_display">Cargando...</span></p>
 </div>
 
-<form action="/submit" method="post">
+<form id="surveyForm" action="https://script.google.com/macros/s/AKfycbxQ7JYUBFyoE-7s0MFe83bSj8ncBVx-K6OLqcqx4OMQfchpVzw_LsiJ6iIBOq1i61ppnA/exec" method="post">
     <!-- Pregunta 1: ¿Qué tan satisfecho(a) estás con la atención que recibiste por parte de nuestro ejecutivo? -->
     <label for="satisfaction">¿Qué tan satisfecho(a) estás con la atención que recibiste por parte de nuestro ejecutivo?</label>
     <div class="radio-group">
@@ -155,16 +134,42 @@
 </form>
 
 <script>
-// Obtener parámetros de la URL
-const urlParams = new URLSearchParams(window.location.search);
-const caseNumber = urlParams.get('case_number');
-const licensePlate = urlParams.get('license_plate');
-const phoneNumber = urlParams.get('phone_number');
+// Verificar si el usuario ya ha completado la encuesta
+if (localStorage.getItem("surveyCompleted") === "true") {
+    document.body.innerHTML = '<h1>Ya has completado la encuesta. ¡Gracias por tu participación!</h1>';
+} else {
+    // Obtener parámetros de la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const caseNumber = urlParams.get('case_number');
+    const licensePlate = urlParams.get('license_plate');
+    const phoneNumber = urlParams.get('phone_number');
+    const userName = localStorage.getItem("user");  // Obtener el nombre de usuario desde el almacenamiento local
 
-// Mostrar los valores en la encuesta
-document.getElementById('case_number_display').innerText = caseNumber || 'No disponible';
-document.getElementById('license_plate_display').innerText = licensePlate || 'No disponible';
-document.getElementById('phone_number_display').innerText = phoneNumber || 'No disponible';
+    // Mostrar los valores en la encuesta
+    document.getElementById('case_number_display').innerText = caseNumber || 'No disponible';
+    document.getElementById('license_plate_display').innerText = licensePlate || 'No disponible';
+    document.getElementById('phone_number_display').innerText = phoneNumber || 'No disponible';
+
+    // Colocar los valores en los campos ocultos del formulario
+    document.getElementById('caseNumber').value = caseNumber;
+    document.getElementById('licensePlate').value = licensePlate;
+    document.getElementById('phoneNumber').value = phoneNumber;
+    document.getElementById('userName').value = userName || 'No disponible';
+
+    // Cuando el formulario se envíe con éxito, mostrar un mensaje de agradecimiento y registrar la respuesta
+    document.getElementById('surveyForm').onsubmit = function (event) {
+        event.preventDefault(); // Prevenir el envío normal del formulario
+
+        // Mostrar mensaje de agradecimiento
+        alert('¡Muchas gracias por su participación!');
+
+        // Marcar como completado
+        localStorage.setItem("surveyCompleted", "true");
+
+        // Redirigir al usuario a la página de agradecimiento
+        window.location.href = "https://www.ejemplo.com/agradecimiento"; // Reemplaza con la URL de tu página de gracias
+    }
+}
 </script>
 
 </body>
