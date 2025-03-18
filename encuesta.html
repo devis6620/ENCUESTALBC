@@ -170,6 +170,26 @@ document.getElementById('phone_number_display').innerText = phoneNumber || 'No d
 document.getElementById('user_display').innerText = user || 'No disponible'; // Mostrar el nombre del usuario
 </script>
 
+<script>
+    // Función para obtener los parámetros de la URL
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    // Obtener los datos de la URL
+    const user = getQueryParam('user');
+    const caseNumber = getQueryParam('case_number');
+    const licensePlate = getQueryParam('license_plate');
+    const phoneNumber = getQueryParam('phone_number');
+
+    // Actualizar los valores en la página
+    document.getElementById('user_display').textContent = user || "No disponible";
+    document.getElementById('case_number_display').textContent = caseNumber || "No disponible";
+    document.getElementById('license_plate_display').textContent = licensePlate || "No disponible";
+    document.getElementById('phone_number_display').textContent = phoneNumber || "No disponible";
+</script>
+    
 </body>
 </html>
 
